@@ -5,6 +5,10 @@ body{
   
 }
 
+#testMeasure{
+  display:none;
+  width:auto;
+}
 
 .wrap{
   position: relative;
@@ -14,28 +18,11 @@ body{
   
 }
 
-.week1, .week2, .week3, .week4, .week5{
+.weekend{
   position: absolute;
   top: -1em;
-  width: 4em;
+  width: 1em;
   height: 40em;
   background-color: #CCCCCC;
   opacity: .5;
-}
-
-.week1
-{
-  left: 11.5em;  
-}
-.week2{
-  left: 24.5em;
-}
-.week3{
- left: 37.75em;
-}
-.week4{
-  left: 50.75em;
-}
-.week5{
-  left: 64em;
 }
