@@ -1,0 +1,41 @@
+body{
+  font-family: 'Source Code Pro', Courier, monospace;
+  font-size: 16px;
+  line-height: 2em;
+  
+}
+
+
+.wrap{
+  position: relative;
+  margin: auto;
+  margin-top: 8em;
+  width: 72em;
+  
+}
+
+.week1, .week2, .week3, .week4, .week5{
+  position: absolute;
+  top: -1em;
+  width: 4em;
+  height: 38em;
+  background-color: #CCCCCC;
+  opacity: .5;
+}
+
+.week1
+{
+  left: 11.5em;  
+}
+.week2{
+  left: 24.5em;
+}
+.week3{
+ left: 37.75em;
+}
+.week4{
+  left: 50.75em;
+}
+.week5{
+  left: 64em;
+}
