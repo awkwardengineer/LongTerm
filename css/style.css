@@ -10,7 +10,7 @@ body{
   position: relative;
   margin: auto;
   margin-top: 8em;
-  width: 72em;
+  width: 74em;
   
 }
 
@@ -18,7 +18,7 @@ body{
   position: absolute;
   top: -1em;
   width: 4em;
-  height: 38em;
+  height: 40em;
   background-color: #CCCCCC;
   opacity: .5;
 }
