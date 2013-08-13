@@ -1,6 +1,6 @@
 body{
   font-family: 'Source Code Pro', Courier, monospace;
-  font-size: 16px;
+  font-size: 22px;
   line-height: 2em;
   
 }
@@ -8,12 +8,13 @@ body{
 #testMeasure{
   display:none;
   width:auto;
+  height: auto;
 }
 
 .wrap{
   position: relative;
   margin: auto;
-  margin-top: 8em;
+  margin-top: 3em;
   width: 74em;
   
 }
@@ -25,4 +26,29 @@ body{
   height: 40em;
   background-color: #CCCCCC;
   opacity: .5;
+}
+
+.event{
+  position: absolute;
+  height:1.75em;
+  
+  background-color: #22BB22;
+  opacity: .5;
+
+}
+
+.summary{
+  position: absolute;
+  bottom: 3.75em;
+  left: -.5em;
+  width: 4.5em;
+  
+  font-size: .5em;
+  line-height: 1em;
+  
+  
+  color: black;
+
+ 
+  text-align: center;
 }
