@@ -11,12 +11,12 @@ $(document).ready( function(){
 
 
 function drawWeekendBars(){
-  var OFFSET = 21.5;
-  var WEEKSIZE = 21;
+  var OFFSET = 27;
+  var WEEKSIZE = 28;
 
   var UNIT = $("#testMeasure").width();
 
-  $(".weekend").css("width", 6 * UNIT );
+  $(".weekend").css("width", 8 * UNIT );
   
   $("#week1").css("left", OFFSET * UNIT);
   $("#week2").css("left", (OFFSET + WEEKSIZE) * UNIT);
@@ -39,7 +39,7 @@ function drawCalendar(){
  var monthStart = today.getMonth();       //starts the calendar with this month's month
  var string
  
- $(".calendar").append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp; T&nbsp; W&nbsp; H&nbsp; F&nbsp; S&nbsp; S&nbsp;&nbsp;M&nbsp; T&nbsp; W&nbsp; H&nbsp; F&nbsp; S&nbsp; S&nbsp;&nbsp;M&nbsp; T&nbsp; W&nbsp; H&nbsp; F&nbsp; S&nbsp; S&nbsp;&nbsp;M&nbsp; T&nbsp; W&nbsp; H&nbsp; F&nbsp; S&nbsp; S&nbsp;&nbsp;M&nbsp; T&nbsp; W&nbsp; H&nbsp; F&nbsp; S&nbsp; S&nbsp;</p>");
+ $(".calendar").append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp;</p>");
  
  
   for (var month in MONTHS)
@@ -59,7 +59,7 @@ function drawCalendar(){
     
     while (leading > 0){
     
-      string = string + " &nbsp;&nbsp;";
+      string = string + " &nbsp;&nbsp;&nbsp;";
       leading--;
     }
         
@@ -70,7 +70,7 @@ function drawCalendar(){
       if (day < 10){
         string = string + "0"
       }
-      string = string + day + " ";
+      string = string + day + " &nbsp;";
       
     }
     
@@ -87,25 +87,26 @@ function drawCalendar(){
 
 function getData()
 {
-  return set2;
+  return set1;
 }
 
 function renderEvents(data){
   //expects a JSON object using google's RESTful calendar API v3
   var startDay
   var endDay
+  var length
   
   
-  var OFFSET = .5;
-  var OFFSET_Y = 1.05;
+  var OFFSET = -.5;
+  var OFFSET_Y = 1.15;
 
 
   var UNIT = $("#testMeasure").width();
-  var UNIT_Y = $("#testMeasure").height() * .75;
+  var UNIT_Y = $("#testMeasure").height() * 1.33 ;
 
   
   
-  for (item in data.items){
+  for (item in data.items){ 
   
     //parses the JSON for dates
     if ('date' in data.items[item].start){
@@ -121,6 +122,16 @@ function renderEvents(data){
 
     }
     
+    //calculate the length of the even
+    if ((endDay.getMonth() - startDay.getMonth() + ( endDay.getYear() - startDay.getYear() ) * 12) == 0)
+    {
+      //this code is for events that do not spill over the end of the month
+      length = endDay.getDate() - startDay.getDate() + 1; 
+    
+    }
+    
+    
+    
     //calculate X position in units of days of calendar space
     var x = startDay.getDate();
     console.log("x: " + data.items[item].summary + " " + startDay);
@@ -131,9 +142,10 @@ function renderEvents(data){
     }
     else{
       x = x + startDay.getDay();
-    }
-    
-    
+    }    
+        
+    //calculates the Y position in units of calendar space
+    // also hides out of range events
     var today = new Date();
     var y = startDay.getMonth() - today.getMonth() + ( startDay.getYear() - today.getYear() ) * 12;
     console.log("y: " + y )
@@ -141,7 +153,7 @@ function renderEvents(data){
     if (y >= 0) //meaning the month is not in the past
     {
 
-    $("<div class='event'><div class='summary'>" + data.items[item].summary + "</div></div>").css(   {"left" : UNIT * (OFFSET + 3 * x) ,"top" : UNIT_Y * (OFFSET_Y + y), "width" : 3 * UNIT } ).appendTo(".wrap") ;
+    $("<div class='event'><div class='summary'>" + data.items[item].summary + "</div></div>").css(   {"left" : UNIT * (OFFSET + 4 * x) ,"top" : UNIT_Y * (OFFSET_Y + y), "width" : 4 * UNIT * length - 8 } ).appendTo(".wrap") ;
     
     }
   

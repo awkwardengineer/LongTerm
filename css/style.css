@@ -1,7 +1,7 @@
 body{
-  font-family: 'Source Code Pro', Courier, monospace;
-  font-size: 22px;
-  line-height: 2em;
+  font-family:  Courier, monospace;
+  font-size: 16px;
+  line-height: 3em;
   
 }
 
@@ -9,13 +9,16 @@ body{
   display:none;
   width:auto;
   height: auto;
+ // outline: black solid 1px;
 }
 
 .wrap{
   position: relative;
   margin: auto;
   margin-top: 3em;
-  width: 74em;
+  width: 98em;
+//  outline: black solid 1px;
+
   
 }
 
@@ -23,15 +26,14 @@ body{
   position: absolute;
   top: -1em;
   width: 1em;
-  height: 40em;
-  background-color: #CCCCCC;
+  height: 54em;
+  background-color: #DDDDDD;
   opacity: .5;
 }
 
 .event{
   position: absolute;
-  height:1.75em;
-  
+  height:1.75em; 
   background-color: #22BB22;
   opacity: .5;
 
@@ -40,15 +42,12 @@ body{
 .summary{
   position: absolute;
   bottom: 3.75em;
-  left: -.5em;
-  width: 4.5em;
+  width: 100%;
+
   
   font-size: .5em;
   line-height: 1em;
   
-  
-  color: black;
-
- 
+  color: black; 
   text-align: center;
 }
