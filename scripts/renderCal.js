@@ -95,7 +95,7 @@ function renderEvents(data){
   //expects a JSON object using google's RESTful calendar API v3
   var startDay
   var endDay
-  var length
+  
   
   
   var OFFSET = -.5;
@@ -108,6 +108,8 @@ function renderEvents(data){
   
   
   for (item in data.items){ 
+  
+    var length = 1;
   
     //parses the JSON for dates
     if ('date' in data.items[item].start){
@@ -128,14 +130,23 @@ function renderEvents(data){
     {
       //this code is for events that do not spill over the end of the month
       length = endDay.getDate() - startDay.getDate() + 1; 
-    
+      console.log('no spill: ' + data.items[item].summary);
+    }
+    else{
+      console.log('spillover: ' + data.items[item].summary);
+//      endDay.setMonth(endDay.getMonth()+1);
+      endDay.setDate(0);
+      console.log(startDay.getDate());
+      console.log(endDay.getDate());
+      console.log(endDay.getMonth());
+      length = endDay.getDate() - startDay.getDate() + 1; 
     }
     
     
     
     //calculate X position in units of days of calendar space
     var x = startDay.getDate();
-    console.log("x: " + data.items[item].summary + " " + startDay);
+    //console.log("x: " + data.items[item].summary + " " + startDay);
     
     startDay.setDate(1);
     if (startDay.getDay() == 0){
@@ -149,7 +160,7 @@ function renderEvents(data){
     // also hides out of range events
     var today = new Date();
     var y = startDay.getMonth() - today.getMonth() + ( startDay.getYear() - today.getYear() ) * 12;
-    console.log("y: " + y )
+    //console.log("y: " + y )
     
     if (y >= 0) //meaning the month is not in the past
     {
