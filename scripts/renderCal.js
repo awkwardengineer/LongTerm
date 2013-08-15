@@ -66,7 +66,7 @@ function drawCalendar(){
         
     
     //writes out the days in each month
-    for (var day = 1; day <= NUMDAYS[month]; day++){
+    for (var day = 1; day <= NUMDAYS[today.getMonth()]; day++){
     
       if (day < 10){
         string = string + "0"
