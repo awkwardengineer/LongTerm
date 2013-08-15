@@ -40,6 +40,8 @@ function drawCalendar(){
  var monthStart = today.getMonth();       //starts the calendar with this month's month
  var string
  
+ 
+ 
  $(".calendar").append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp;</p>");
  
  
@@ -92,82 +94,95 @@ function getData()
 }
 
 function renderEvents(data){
-  //expects a JSON object using google's RESTful calendar API v3
+  //expects a JSON object using google's RESTful calendar API v3 
+  
+  for (item in data.items){ 
+  
+    render(data.items[item]);
+    
+  }
+}
+
+function render(item)
+{
   var startDay
   var endDay
-  
-  
   
   var OFFSET = -.5;
   var OFFSET_Y = 1.15;
 
-
   var UNIT = $("#testMeasure").width();
   var UNIT_Y = $("#testMeasure").height() * 1.33 ;
 
-  
-  
-  for (item in data.items){ 
-  
-    var length = 1;
-  
-    //parses the JSON for dates
-    if ('date' in data.items[item].start){
-      
-      startDay = new Date(data.items[item].start.date + "T00:00:00-0500");
-      endDay = new Date(data.items[item].end.date + "T00:00:00-0500");
-      
-    }
-    else if ('dateTime' in data.items[item].start){
-     
-      startDay = new Date(data.items[item].start.dateTime);
-      endDay = new Date(data.items[item].end.dateTime);
+  var length = 1;
 
-    }
+  //parses the JSON for dates
+  if ('date' in item.start){
     
-    //calculate the length of the even
-    if ((endDay.getMonth() - startDay.getMonth() + ( endDay.getYear() - startDay.getYear() ) * 12) == 0)
-    {
-      //this code is for events that do not spill over the end of the month
-      length = endDay.getDate() - startDay.getDate() + 1; 
-      console.log('no spill: ' + data.items[item].summary);
-    }
-    else{
-      console.log('spillover: ' + data.items[item].summary);
-//      endDay.setMonth(endDay.getMonth()+1);
-      endDay.setDate(0);
-      console.log(startDay.getDate());
-      console.log(endDay.getDate());
-      console.log(endDay.getMonth());
-      length = endDay.getDate() - startDay.getDate() + 1; 
-    }
+    startDay = new Date(item.start.date + "T00:00:00-0500");
+    endDay = new Date(item.end.date + "T00:00:00-0500");
     
-    
-    
-    //calculate X position in units of days of calendar space
-    var x = startDay.getDate();
-    //console.log("x: " + data.items[item].summary + " " + startDay);
-    
-    startDay.setDate(1);
-    if (startDay.getDay() == 0){
-      x = x + 7;
-    }
-    else{
-      x = x + startDay.getDay();
-    }    
-        
-    //calculates the Y position in units of calendar space
-    // also hides out of range events
-    var today = new Date();
-    var y = startDay.getMonth() - today.getMonth() + ( startDay.getYear() - today.getYear() ) * 12;
-    //console.log("y: " + y )
-    
-    if (y >= 0) //meaning the month is not in the past
-    {
-
-    $("<div class='event'><div class='summary'>" + data.items[item].summary + "</div></div>").css(   {"left" : UNIT * (OFFSET + 4 * x) ,"top" : UNIT_Y * (OFFSET_Y + y), "width" : 4 * UNIT * length - 8 } ).appendTo(".wrap") ;
-    
-    }
-  
   }
+  else if ('dateTime' in item.start){
+   
+    startDay = new Date(item.start.dateTime);
+    endDay = new Date(item.end.dateTime);
+
+  }
+
+  //calculate the length of the event
+  if ((endDay.getMonth() - startDay.getMonth() + ( endDay.getYear() - startDay.getYear() ) * 12) == 0)
+  {
+    //this code is for events that do not spill over the end of the month
+    length = endDay.getDate() - startDay.getDate() + 1; 
+    
+  }
+  else{
+    //for events that spill over, it splits the event up and add the event
+    //with a new start date on the first of the next month.
+
+    oldDay = new Date(endDay);
+
+    endDay.setDate(1);
+    console.log(endDay);
+
+    //basically breaks the date off and recursivly calls itself to render again
+    render({
+      'start': {'dateTime': endDay.toISOString()},
+      'end': {'dateTime': oldDay.toISOString()},
+      'summary': item.summary
+    });
+
+    endDay.setDate(0);
+    length = endDay.getDate() - startDay.getDate() + 1; 
+    
+  }
+
+
+
+  //calculate X position in units of days of calendar space
+  var x = startDay.getDate();
+  //console.log("x: " + data.item.summary + " " + startDay);
+
+  startDay.setDate(1);
+  if (startDay.getDay() == 0){
+    x = x + 7;
+  }
+  else{
+    x = x + startDay.getDay();
+  }    
+      
+  //calculates the Y position in units of calendar space
+  // also hides out of range events
+  var today = new Date();
+  var y = startDay.getMonth() - today.getMonth() + ( startDay.getYear() - today.getYear() ) * 12;
+  //console.log("y: " + y )
+
+  if (y >= 0) //meaning the month is not in the past
+  {
+
+  $("<div class='event'><div class='summary'>" + item.summary + "</div></div>").css(   {"left" : UNIT * (OFFSET + 4 * x) ,"top" : UNIT_Y * (OFFSET_Y + y), "width" : 4 * UNIT * length - 8 } ).appendTo(".wrap") ;
+  }
+  
 }
+  

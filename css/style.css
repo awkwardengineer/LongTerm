@@ -1,6 +1,6 @@
 body{
   font-family:  Courier, monospace;
-  font-size: 16px;
+  font-size: 12px;
   line-height: 3em;
   
 }
@@ -16,7 +16,8 @@ body{
   position: relative;
   margin: auto;
   margin-top: 3em;
-  width: 98em;
+  width:92em;
+
 //  outline: black solid 1px;
 
   
@@ -41,11 +42,13 @@ body{
 
 .summary{
   position: absolute;
-  bottom: 3.75em;
+  bottom: 2.5em;
   width: 100%;
+  max-height: 2em;
+
 
   
-  font-size: .5em;
+  font-size: .8em;
   line-height: 1em;
   
   color: black; 

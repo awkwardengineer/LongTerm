@@ -49,6 +49,7 @@ function handleAuthClick(event) {
 function makeApiCall() {
   gapi.client.load('calendar', 'v3', function() {
     var today = new Date();
+    today.setDate(1);
     var request = gapi.client.calendar.events.list({
       'calendarId': 'sammymiami@gmail.com',
       'fields':'items(end,start,summary)',
