@@ -3,8 +3,9 @@ $(document).ready( function(){
 
   drawCalendar();
   drawWeekendBars();
- 
-  renderEvents( getData() );
+  
+  //right now, the code is written in a very bad way
+  //renderEvents( getData() );
   
 });
 
