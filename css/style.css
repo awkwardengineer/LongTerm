@@ -1,5 +1,6 @@
 body{
-  font-family:  Courier, monospace;
+  font-family:  font-family: 'Open Sans', sans-serif;
+  font-weight:300;
   font-size: 12px;
   line-height: 3em;
   
@@ -21,6 +22,22 @@ body{
   stroke:#CCCCCC;
   stroke-width:1;
 }
+
+.monthTitle{
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight:700;
+  font-size:2em;
+  fill: #333333;  
+}
+
+.dayOfWeek{
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight:700;
+  font-size:1.1em;
+  fill: #333333;  
+
+}
+
 
 .weekend{
   fill:#CCCCCC;

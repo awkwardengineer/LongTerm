@@ -3,21 +3,7 @@ $(document).ready( function(){
 
   renderCal.init();
   
-  testDate = new Date();
-  
-  renderCal.drawEvent(testDate,2,"blah blah");
-  
-  testDate.setMonth(7);
-  testDate.setDate(8);
-  renderCal.drawEvent(testDate,4,"blah blah");
-  
-  testDate.setMonth(12);
-  testDate.setDate(3);
-  renderCal.drawEvent(testDate,2,"blah blah");
-  
-  testDate.setMonth(1);
-  testDate.setDate(2);
-  renderCal.drawEvent(testDate,5,"blah blah");
+  //renderCal.processEvents(set1);
   
   
 });
@@ -51,6 +37,11 @@ var renderCal = {
     var today = new Date();
     var day = startDate.getDate();
     var month = ( startDate.getMonth() - today.getMonth() + 12) % 12 + 1 ;
+
+
+  //  console.log("Summary: " + summary);
+  //  console.log("Start: " + startDate);
+  //  console.log("Length: " + length);
     
     startDate.setDate(1);
     leading = startDate.getDay();
@@ -71,6 +62,7 @@ var renderCal = {
   
   },
   
+  
   drawField:function(){
        
     var MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT","NOV","DEC"];
@@ -86,7 +78,7 @@ var renderCal = {
       d3.select("#field").append("text").text(DAYWEEK[ i % 7 ])
                                   .attr("x", (i + 1) * this.unitX)
                                   .attr("y", "1em" )
-                                  .attr("class","date");
+                                  .attr("class","dayOfWeek");
       if (i % 7 == 6){
         d3.select("#field").append("rect").attr("width", .9*this.unitX )
                                         .attr("height", 13.5 * this.unitY)
@@ -128,9 +120,9 @@ var renderCal = {
                                         .attr("ry", .25*this.unitX)
                                         .attr("class","month");
       d3.select("#field").append("text").text(MONTHS[today.getMonth()])
-                                        .attr("x", leading * this.unitX)
-                                        .attr("y", this.unitY * i)
-                                        .attr("class","date");
+                                        .attr("x", (leading - 1.75) * this.unitX)
+                                        .attr("y", (this.unitY * i) + (.4 * this.unitX))
+                                        .attr("class","monthTitle");
                                         
       for (var j = 0; j < NUMDAYS[today.getMonth()]; j++){
             d3.select("#field").append("text").text(j + 1)
@@ -144,6 +136,78 @@ var renderCal = {
     }
     
   
+  },
+  
+  processEvents:function(data){
+  //expects a JSON object using google's RESTful calendar API v3 
+  
+    for (item in data.items){ 
+    
+      this.eventHelper(data.items[item]);
+      
+    }
+  },
+
+  
+  eventHelper:function(item){
+      var startDay;
+      var endDay;
+      var today = new Date();
+      
+      //parses the JSON for dates
+      if ('date' in item.start){
+             
+        startDay = new Date(item.start.date);
+        endDay = new Date(item.end.date);
+        
+        startDay.setMinutes(startDay.getMinutes() + startDay.getTimezoneOffset());  //dates need to be shifted to local timezone
+        endDay.setMinutes(endDay.getMinutes() + endDay.getTimezoneOffset());
+        
+      }
+      else if ('dateTime' in item.start){
+       
+        startDay = new Date(item.start.dateTime);
+        endDay = new Date(item.end.dateTime);
+        
+        
+      }
+      
+      if (startDay < today.setDate(1)) {return;}
+
+      //calculate the length of the event
+      if ((endDay.getMonth() - startDay.getMonth() + ( endDay.getYear() - startDay.getYear() ) * 12) == 0)
+      {
+        //this code is for events that do not spill over the end of the month
+        length = endDay.getDate() - startDay.getDate();
+        if (length == 0) {length = 1;}
+        this.drawEvent(startDay,length,item.summary);
+        
+      }
+      else {
+        //for events that spill over, it splits the event up and add the event
+        //with a new start date on the first of the next month.
+
+        oldDay = new Date(endDay);
+
+        endDay.setDate(1);
+        
+
+        //basically breaks the date off and recursivly calls itself to render again
+        this.eventHelper({
+          'start': {'dateTime': endDay.toISOString()},
+          'end': {'dateTime': oldDay.toISOString()},
+          'summary': item.summary
+        });
+
+        endDay.setDate(0);
+        length = endDay.getDate() - startDay.getDate()+1; //the +1 is a weird bugfix relating to end of month spillover
+        if (length == 0) {length = 1;}
+        
+        this.drawEvent(startDay,length,item.summary);
+        
+      }
+  
+  
   }
   
   
@@ -152,90 +216,11 @@ var renderCal = {
 };
 
 
-
 /*
 
-function drawWeekendBars(){
-  var OFFSET = 27;
-  var WEEKSIZE = 28;
-
-  var UNIT = $("#testMeasure").width();
-
-  $(".weekend").css("width", 8 * UNIT );
-  
-  $("#week1").css("left", OFFSET * UNIT);
-  $("#week2").css("left", (OFFSET + WEEKSIZE) * UNIT);
-  $("#week3").css("left", (OFFSET + 2 * WEEKSIZE) * UNIT);
-  $("#week4").css("left", (OFFSET + 3 * WEEKSIZE) * UNIT);
-  $("#week5").css("left", (OFFSET + 4 * WEEKSIZE) * UNIT);
-
 }
 
-function drawCalendar(){
 
-
- var MONTHS = new Array();
- MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT","NOV","DEC"]
- 
- var NUMDAYS = new Array();
- NUMDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
- 
- var today = new Date();
- var monthStart = today.getMonth();       //starts the calendar with this month's month
- var string
- 
- 
- 
- $(".calendar").append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp; M&nbsp;&nbsp; T&nbsp;&nbsp; W&nbsp;&nbsp; H&nbsp;&nbsp; F&nbsp;&nbsp; S&nbsp;&nbsp; S&nbsp;&nbsp;</p>");
- 
- 
-  for (var month in MONTHS)
-  {
-  
-    //writes out the name of the month
-    string = "<p>" + MONTHS[today.getMonth()] + "&nbsp;";
-
-    //add leading blanks so the month starts on the correct day of the week.
-    //works by setting the date to the first of the month and asking what day of the week it is.
-    
-    today.setDate(1);
-    
-    //the days are numbered 0-6, with Sunday as 0, but my calendar starts on monday
-    var leading = today.getDay();
-    if (leading == 0) leading = 7;
-    
-    while (leading > 0){
-    
-      string = string + " &nbsp;&nbsp;&nbsp;";
-      leading--;
-    }
-        
-    
-    //writes out the days in each month
-    for (var day = 1; day <= NUMDAYS[today.getMonth()]; day++){
-    
-      if (day < 10){
-        string = string + "0"
-      }
-      string = string + day + " &nbsp;";
-      
-    }
-    
-    string = string + "</p>"
- 
-    //after writing everything out, it's ok to advance the loop
-    today.setMonth(today.getMonth()+1);
-   
-    $(".calendar").append(string);
-  
-  }
-
-}
-
-function getData()
-{
-  return set1;
-}
 
 function renderEvents(data){
   //expects a JSON object using google's RESTful calendar API v3 
@@ -252,14 +237,7 @@ function render(item)
   var startDay
   var endDay
   
-  var OFFSET = -.5;
-  var OFFSET_Y = 1.15;
-
-  var UNIT = $("#testMeasure").width();
-  var UNIT_Y = $("#testMeasure").height() * 1.33 ;
-
-  var length = 1;
-
+  
   //parses the JSON for dates
   if ('date' in item.start){
     
@@ -304,29 +282,4 @@ function render(item)
 
 
 
-  //calculate X position in units of days of calendar space
-  var x = startDay.getDate();
-  //console.log("x: " + data.item.summary + " " + startDay);
-
-  startDay.setDate(1);
-  if (startDay.getDay() == 0){
-    x = x + 7;
-  }
-  else{
-    x = x + startDay.getDay();
-  }    
-      
-  //calculates the Y position in units of calendar space
-  // also hides out of range events
-  var today = new Date();
-  var y = startDay.getMonth() - today.getMonth() + ( startDay.getYear() - today.getYear() ) * 12;
-  //console.log("y: " + y )
-
-  if (y >= 0) //meaning the month is not in the past
-  {
-
-  $("<div class='event'><div class='summary'>" + item.summary + "</div></div>").css(   {"left" : UNIT * (OFFSET + 4 * x) ,"top" : UNIT_Y * (OFFSET_Y + y), "width" : 4 * UNIT * length - 8 } ).appendTo(".wrap") ;
-  }
-  
-}
 */  
