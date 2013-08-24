@@ -25,6 +25,7 @@ var renderCal = {
     this.measure();
     this.unitX = this.width / 40;
     this.unitY = this.height / 14;
+    $("body").css("font-size", .019 * this.height);
     
     this.drawField();  
     
@@ -120,14 +121,14 @@ var renderCal = {
                                         .attr("ry", .25*this.unitX)
                                         .attr("class","month");
       d3.select("#field").append("text").text(MONTHS[today.getMonth()])
-                                        .attr("x", (leading - 1.75) * this.unitX)
-                                        .attr("y", (this.unitY * i) + (.4 * this.unitX))
+                                        .attr("x", (leading - .75) * this.unitX)
+                                        .attr("y", (this.unitY * i) + (.47 * this.unitX))
                                         .attr("class","monthTitle");
                                         
       for (var j = 0; j < NUMDAYS[today.getMonth()]; j++){
             d3.select("#field").append("text").text(j + 1)
                                               .attr("x", (j + leading) * this.unitX)
-                                              .attr("y", i * this.unitY + .33*this.unitX)
+                                              .attr("y", i * this.unitY + .37*this.unitX)
                                               .attr("class","date");
       }
       

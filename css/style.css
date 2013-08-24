@@ -1,7 +1,7 @@
 body{
   font-family:  font-family: 'Open Sans', sans-serif;
   font-weight:300;
-  font-size: 12px;
+  font-size: 1em;
   line-height: 3em;
   
 }
@@ -27,7 +27,8 @@ body{
   font-family: 'Open Sans Condensed', sans-serif;
   font-weight:700;
   font-size:2em;
-  fill: #333333;  
+  fill: #333333;
+  text-anchor:end;
 }
 
 .dayOfWeek{
