@@ -1,59 +1,63 @@
 body{
-  font-family:  Courier, monospace;
-  font-size: 12px;
+  font-family:  font-family: 'Open Sans', sans-serif;
+  font-weight:300;
+  font-size: 1em;
   line-height: 3em;
   
-}
-
-#testMeasure{
-  display:none;
-  width:auto;
-  height: auto;
- // outline: black solid 1px;
 }
 
 .wrap{
   position: relative;
   margin: auto;
-  margin-top: 3em;
-  width:92em;
-
-//  outline: black solid 1px;
-
   
 }
 
+#calendar{
+  text-align: center;
+  padding-top: 3%;
+}
+
+.month{
+  fill:none;
+  stroke:#CCCCCC;
+  stroke-width:1;
+}
+
+.monthTitle{
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight:700;
+  font-size:2em;
+  fill: #333333;
+  text-anchor:end;
+}
+
+.dayOfWeek{
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight:700;
+  font-size:1.1em;
+  fill: #333333;  
+
+}
+
+
 .weekend{
-  position: absolute;
-  top: -1em;
-  width: 1em;
-  height: 54em;
-  background-color: #DDDDDD;
-  opacity: .5;
+  fill:#CCCCCC;
+  opacity:.4;
+  stroke:#333333;
+  stroke-width:2;
+}
+
+.date, .summary{
+  text-anchor:middle;
 }
 
 .event{
-  position: absolute;
-  height:1.75em; 
-  background-color: #22BB22;
-  opacity: .5;
-
+  fill:#72E855;
+  opacity:.6;
+  stroke:#29541F;
+  stroke-width:2;
 }
 
-.summary{
-  position: absolute;
-  bottom: 2.5em;
-  width: 100%;
-  max-height: 2em;
-
-
-  
-  font-size: .8em;
-  line-height: 1em;
-  
-  color: black; 
-  text-align: center;
-}
 
 #authorize-button{
   position: fixed;

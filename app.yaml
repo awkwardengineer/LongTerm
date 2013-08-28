@@ -1,5 +1,9 @@
 application: linearcalendar
+<<<<<<< HEAD
 version: 1
+=======
+version: 2
+>>>>>>> origin/dev
 runtime: python27
 api_version: 1
 threadsafe: true

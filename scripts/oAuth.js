@@ -57,7 +57,7 @@ function makeApiCall() {
     });
     request.execute(function(response) {
       console.log(response);
-      renderEvents(response);
+      renderCal.processEvents(response);
     });
   });
 }
