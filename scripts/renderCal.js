@@ -25,7 +25,7 @@ var renderCal = {
     this.measure();
     this.unitX = this.width / 40;
     this.unitY = this.height / 14;
-    $("body").css("font-size", .019 * this.height);
+    $("html").css("font-size", .016 * this.height);
     
     this.drawField();  
     
