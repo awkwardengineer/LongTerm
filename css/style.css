@@ -51,7 +51,7 @@ body{
   text-anchor:middle;
 }
 
-.event{
+.event rect{
   fill:#72E855;
   opacity:.6;
   stroke:#29541F;
