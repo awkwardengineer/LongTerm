@@ -58,9 +58,13 @@ function makeApiCall() {
     request.execute(function(response) {
       console.log(response);
       
-      renderCal.init();
-      renderCal.processEvents(response);
-      renderCal.mapOverField();
+//      renderCal.init();
+//      renderCal.processEvents(response);
+//      renderCal.mapOverField();
+      
+      demoCal.init();
+      demoCal.processEvents(response);
+      demoCal.mapOverField();
 
       //renderCal.processEvents(set1);
     });

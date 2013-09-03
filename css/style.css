@@ -51,7 +51,7 @@ body{
   text-anchor:middle;
 }
 
-.event rect{
+.eventBlock{
   fill:#72E855;
   opacity:.6;
   stroke:#29541F;
@@ -64,4 +64,12 @@ body{
   top: 1em;
   right: 1em;
 
+}
+
+.node {
+  fill: #000;
+}
+
+.link {
+  stroke: #333333;
 }

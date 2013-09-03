@@ -17,7 +17,16 @@ class MainPage(webapp2.RequestHandler):
         path= os.path.join(os.path.dirname(__file__), 'index.html')
   
         self.response.out.write(template.render(path,template_values))
+        
+class TestPage(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        
+        path= os.path.join(os.path.dirname(__file__), 'nodes.html')
+  
+        self.response.out.write(template.render(path,template_values))
 
 
-app = webapp2.WSGIApplication([('/',MainPage)],
+app = webapp2.WSGIApplication([('/nodes.html',TestPage),
+                               ('/',MainPage)],
                               debug=True)
