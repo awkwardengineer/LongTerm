@@ -27,7 +27,7 @@ var demoCal = {
     $("html").css("font-size", .016 * this.height);
     
     this.force = d3.layout.force()
-                            .charge(-10)
+                            .charge(-.05*this.unitX)
                             .linkDistance(.05*this.unitX)
                             .size([this.width,this.height])
                             .gravity(0)
@@ -54,7 +54,8 @@ var demoCal = {
                            fixed: true}
       var newNodeText = {x: calcX(d) + demoCal.unitX*.5*(.25 + d.length),
                          y: demoCal.unitY,
-                         summary: d.summary};
+                         summary: d.summary,
+                         radius:.5*demoCal.unitY};
     
       demoCal.nodes.push(newNodeAnchor);
       demoCal.nodes.push(newNodeText);
@@ -69,7 +70,8 @@ var demoCal = {
                                                                 return !d.fixed;
                                                               }).append("text")
                                                               .attr("class", "summary")
-                                                              .text(function(d){return d.summary;});
+                                                              .text(function(d){return d.summary;})
+                                                              .call(this.force.drag);
                                                               
                                                               
       
@@ -276,11 +278,22 @@ var demoCal = {
   
   tick: function(e) {
   
-    var k = 5 * e.alpha;
+    var k = 6 * e.alpha;
       demoCal.links.forEach(function(d){
         d.source.y +=k;
         d.target.y -=k;
       });
+      
+    
+    
+    var i = 0;
+    var textNodes = demoCal.force.nodes().filter(function(d){return !d.fixed;});
+    var n = textNodes.length;
+    
+    var q = d3.geom.quadtree(textNodes);
+ 
+
+    while (++i < n) q.visit(demoCal.collide(textNodes[i]));  
   
     d3.select("#field").selectAll(".node").filter(function(d){return d.fixed;})
                                           .attr("cx", function(d) { return d.x; })
@@ -296,6 +309,29 @@ var demoCal = {
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; });
   },
+  
+  collide: function(node) {
+  var r = node.radius + 16,
+      nx1 = node.x - r,
+      nx2 = node.x + r,
+      ny1 = node.y - r,
+      ny2 = node.y + r;
+  return function(quad, x1, y1, x2, y2) {
+    if (quad.point && (quad.point !== node)) {
+      var x = node.x - quad.point.x,
+          y = node.y - quad.point.y,
+          l = Math.sqrt(x * x + y * y),
+          r = node.radius + quad.point.radius;
+      if (l < r) {
+        l = (l - r) / l * .5;
+        node.x -= x *= l;
+        node.y -= y *= l;
+        quad.point.x += x;
+        quad.point.y += y;
+      }
+    }
+    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+  }}
   
 
 };
